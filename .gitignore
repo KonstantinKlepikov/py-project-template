@@ -173,5 +173,4 @@ cython_debug/
 # Project folders
 .vscode/*
 !.vscode/.gitkeep
-research/*
-!research/.gitkeep
+docker-stack.yml

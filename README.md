@@ -7,8 +7,10 @@ Change python version before instalation (install and use `pyenv` for different 
 ```txt
 # .python-version
 
-3.12.5
+3.14.0
 ```
+
+Change version of python docker image in `docker-compose/Dockerfile.base`
 
 Define placement of `.venv` folder local
 
@@ -25,11 +27,11 @@ virtualenvs.prefer-active-python = true
 
 ## Use local
 
-- `make serve` not implemented
-- `make down` not implemented
-- `make clean` not implemented
-- `make check` tests, lint and mypy all
+Create `.env` file in `docker-compose` folder
 
-Use `docker-compose` folder for difinition of docker images, related to development.
+- `make serve` up and serve docker stack
+- `make down` down docker stack
+- `make check` tests, lint and mypy all
+- look for other command in `Makefile`
 
 Use `research` folder for experiments.
