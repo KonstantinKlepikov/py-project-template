@@ -13,7 +13,8 @@ Development runs inside Docker — commands are executed via `make` targets.
 | Stop                                             | `make down`                                           |
 | Run checks (tests + lint + types)                | `make check`                                          |
 | Show stack config                                | `make config`                                         |
-| Create a python file with optional prompt header | `make create --path=src/module.py [--pr=prompt_name]` |
+| Create a python file with optional prompt header | `make create path=src/module.py [pr=prompt_name]`     |
+| Remove leading triple-quoted comment block       | `make clean path=src/module.py`                       |
 | Install deps locally                             | `poetry install --with dev --no-root`                 |
 
 `make check` runs inside the container: `pytest; mypy src; mypy tests; flake8 src; flake8 tests`

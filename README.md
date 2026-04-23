@@ -29,11 +29,12 @@ virtualenvs.prefer-active-python = true
 
 Create `.env` file in `docker-compose` folder
 
-- `make rename --to <new-name>` rename project after clone template. This command delete itself after renaming
+- `make rename to=<new-name>` rename project after clone template. This command delete itself after renaming
 - `make serve` up and serve docker stack
 - `make down` down docker stack
 - `make check` tests, lint and mypy all
 - `make config` show docker stack info
-- `make create --path=src/module.py [--pr=prompt_name]` - create a python file with optional prompt header
+- `make create path=src/module.py [pr=prompt_name]` - create a python file with optional prompt header
+- `make clean path=src/module.py` - Remove leading triple-quoted comment block from python file
 
 Use `research` folder for experiments. Use `prompts` folder for llm system prompts.
