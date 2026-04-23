@@ -170,6 +170,9 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Logs
+logs/
+
 # Project folders
 .vscode/*
 !.vscode/.gitkeep
