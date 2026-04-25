@@ -35,62 +35,28 @@ config:
 # Usage: make create path=src/module.py [pr=prompt1[,prompt2,...]]
 create:
 ifndef path
-	$(error Argument --path is required. Usage: make create path=src/module.py)
+	$(error Argument <path> is required. Usage: make create path=src/module.py)
 endif
-	@PARENT="$$(dirname "$(path)")"; \
-	if [ ! -d "$$PARENT" ]; then \
-		echo "Error: directory '$$PARENT' does not exist"; exit 1; \
-	fi; \
-	PROMPT_BLOCK=""; \
-	if [ -n "$(pr)" ]; then \
-		TMPBLOCK=$$(mktemp); \
-		for name in $$(echo "$(pr)" | tr ',' ' '); do \
-			PROMPT_FILE=$$(find prompts -maxdepth 1 \( -name "$$name.*" -o -name "$$name" \) 2>/dev/null | head -1); \
-			if [ -z "$$PROMPT_FILE" ]; then \
-				echo "Error: prompt file '$$name' not found in prompts/"; rm -f "$$TMPBLOCK"; exit 1; \
-			fi; \
-			printf '"""\n' >> "$$TMPBLOCK"; \
-			cat "$$PROMPT_FILE" >> "$$TMPBLOCK"; \
-			printf '"""\n' >> "$$TMPBLOCK"; \
-		done; \
-		PROMPT_BLOCK="$$TMPBLOCK"; \
-	fi; \
-	if [ -e "$(path)" ]; then \
-		if [ -z "$(pr)" ]; then \
-			echo "Error: file '$(path)' already exists"; exit 1; \
-		fi; \
-		TMPFILE=$$(mktemp); \
-		awk -v pfile="$$PROMPT_BLOCK" 'BEGIN{b=0;d=0} !d&&/^"""$$/{if(b){b=0;h=h $$0"\n";next}else{b=1;h=h $$0"\n";next}} !d&&b{h=h $$0"\n";next} !d{d=1;printf "%s",h;while((getline l<pfile)>0)print l;print;next} {print} END{if(!d){printf "%s",h;while((getline l<pfile)>0)print l}}' "$(path)" > "$$TMPFILE" && mv "$$TMPFILE" "$(path)"; \
-		rm -f "$$PROMPT_BLOCK"; \
-		echo "Updated: $(path)"; \
-	else \
-		if [ -n "$(pr)" ]; then \
-			cat "$$PROMPT_BLOCK" > "$(path)"; \
-			rm -f "$$PROMPT_BLOCK"; \
-		else \
-			touch "$(path)"; \
-		fi; \
-		echo "Created: $(path)"; \
-	fi
+	@sh scripts/create.sh "$(path)" "$(pr)"
 
 # target: clean - remove leading triple-quoted comment block from a python file
 # Usage: make clean path=src/module.py
 clean:
 ifndef path
-	$(error Argument path is required. Usage: make clean path=src/module.py)
+	$(error Argument <path> is required. Usage: make clean path=src/module.py)
 endif
-	@if [ ! -f "$(path)" ]; then \
-		echo "Error: file '$(path)' does not exist"; exit 1; \
-	fi; \
-	sed -i '/^"""/,/^"""/d' "$(path)"; \
-	sed -i '/./,$$!d' "$(path)"; \
-	echo "Cleaned: $(path)"
+	@sh scripts/clean.sh "$(path)"
+
+# target: env - create docker-compose/.env file; optionally set python version and creates python environment
+# Usage: make env [python=3.12]
+env:
+	@sh scripts/env.sh "$(python)"
 
 # target: rename - replace 'py-project-template' with --to value in key project files
 # Usage: make rename to=my-new-name
 rename:
 ifndef to
-	$(error Argument --to is required. Usage: make rename to=my-new-name)
+	$(error Argument <to> is required. Usage: make rename to=my-new-name)
 endif
 	@sed -i 's/py-project-template/$(to)/g' \
 		AGENTS.md \
