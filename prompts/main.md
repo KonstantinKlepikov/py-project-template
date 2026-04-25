@@ -42,13 +42,12 @@ select = ["I"]
 Type hints are **mandatory everywhere** in production code, strongly recommended in tests.
 
 - Use built-in generic types: `list[str]`, `dict[str, int]`, `set[int]`, `tuple[str, ...]`
-- Do NOT use `typing.List`, `typing.Dict`, etc. (deprecated since PEP 585)
+- Do not use `typing.List`, `typing.Dict`, etc. (deprecated since PEP 585)
 - Use `X | None` instead of `Optional[X]`, use `X | Y` instead of `Union[X, Y]`
 - Always annotate `-> None` for functions that return nothing
 - Use `TypeVar` for generic/reusable functions
 - Specify concrete inner types for generics: `dict[str, int]`, not bare `dict`
 - If mypy complains about type reassignment, rename the variable instead of ignoring
-- Newer use simplified types like `dict` or `list[dict]`. Type must be informative (e.g. `dict[str | int, SomeClass]`)
 - Use alias names for complex types
 
 ```python
@@ -67,20 +66,14 @@ def process(items: List[str]) -> Dict[str, int]:
 ### Function and classes design
 
 - Target ~20-30 lines per function body; >50 lines = decompose
-- Newer use any object or `None` for function return (example `def this() -> str | None: ...`). Function can return something or `None`, noth both.
-- One level of abstraction per function: orchestrate OR implement, don't mix
-- Mark methods that don't use `self` as `@staticmethod`. If it possible, use outside functions indtead of staticmethods
-- Only store in `self` values that live as long as the object; never add fields outside `__init__`
-- If values shared acros all class instances, declare it as attributes in class definition
-- Create chared objects outside of functions or methods, and transfer it inside with function arguments. Dont use outside scoupe directly
+- Newer use any object or `None` for function return (example `def this() -> str | None: ...`). Function must return something or `None`, noth both.
+- One level of abstraction per function.
+- Mark methods that don't use `self` as `@staticmethod`. Minimise declarations of staticmethods.
+- If you need class instance attribute, declare it as class instance attribute when class initialized by `__init__` method.
+- If you need class attribute (e.g. shared values across all class instances), declare it as class attribute.
+- Create chared objects outside of functions or methods, and transfer it inside with function arguments. Dont use outside scoupe directly inside of function scoupe.
 - If it possible, dont use `nonlocal` and `global`
-- To complex arguments of functions, if it used in any pipelines, compose in a class of data
-
-### Async
-
-- Use `async/await` for all I/O-bound operations if project use asyncio
-- Use `asyncio.sleep()`, never `time.sleep()` in async code
-- Use `time.monotonic()` for timing, never `time.time()`
+- Use `async/await` for all I/O-bound operations if project use `asyncio`
 
 ### Decorators
 
@@ -89,12 +82,11 @@ def process(items: List[str]) -> Dict[str, int]:
 
 ## Exception and logging
 
-- Create a root exception per project: `<ExceptionName>Error(Exception)`
-- All custom exceptions inherit cascading from the root
+- Create exception with name pattern: `<ExceptionName>Error(Exception)`
+- All custom exceptions inherit cascading from the root exception of project
 - Always use `from err` when re-raising: `raise ServiceError('msg') from err`
 - Use context managers
-- Use decorators for cross-cutting concerns (logging)
-- Catch specific exceptions, not bare `Exception` (bare `except Exception` only at top-level safety nets, in decorators for logging, or as last `except`)
+- Catch specific exceptions, not bare `Exception` (bare `except Exception` as last `except`)
 - Throw explicit exceptions for "impossible" states rather than ignoring
 
 ```python
@@ -142,10 +134,9 @@ def get_label(status: str) -> str:
 - Two spaces after period in multi-sentence comments
 - Never comment obvious code; comment non-obvious intent
 - Always update comments when changing code
-- Newer comment in a module in the header of file. Use cjmplex comments and docstrings only for functions, methods and classes
+- Newer comment a module in the header of file. Use complex comments and docstrings only for functions, methods and classes
 
 ## Logging
 
 - Use `loguru`
 - Log useful context that helps trace execution flow and diagnose errors
-- Don't decorate high-frequency functions (called hundreds/thousands of times) with log wrappers
