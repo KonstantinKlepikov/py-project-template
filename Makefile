@@ -31,22 +31,6 @@ config:
 	@echo "Volumes:"
 	@docker compose -f ./docker-compose/docker-stack.yml config --volumes
 
-# target: create - create a python file with optional prompt header
-# Usage: make create path=src/module.py [pr=prompt1[,prompt2,...]]
-create:
-ifndef path
-	$(error Argument <path> is required. Usage: make create path=src/module.py)
-endif
-	@sh scripts/create.sh "$(path)" "$(pr)"
-
-# target: clean - remove leading triple-quoted comment block from a python file
-# Usage: make clean path=src/module.py
-clean:
-ifndef path
-	$(error Argument <path> is required. Usage: make clean path=src/module.py)
-endif
-	@sh scripts/clean.sh "$(path)"
-
 # target: env - create docker-compose/.env file; optionally set python version and creates python environment
 # Usage: make env [python=3.12]
 env:
