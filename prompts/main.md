@@ -1,26 +1,8 @@
 # Main python Guide
 
-## Formatting & Style
+Follow PEP 8
 
-- Follow PEP 8 as baseline
-- Formatter/linter: `ruff`
-- Line length: **88**
-- Quote style: **single quotes**
-- Encoding: UTF-8, no encoding declarations
-- Import sorting: handled by `ruff check --fix` (rule `I`)
-
-```toml
-[tool.ruff]
-line-length = 88
-
-[tool.ruff.format]
-quote-style = "single"
-
-[tool.ruff.lint]
-select = ["I"]
-```
-
-## Naming conventions
+## Naming
 
 | Entity | Style | Example |
 | --- | --- | --- |
@@ -31,7 +13,6 @@ select = ["I"]
 | Function / variable | `snake_case` | `get_flights` |
 | Global constant | `CONSTANT_CASE` | `MAX_RETRY_COUNT` |
 | Enum class | Singular noun | `FlightStatus`, `PointType` |
-| Enum values | `snake_case` or `lowercase` | `'active'`, `'cancelled'` |
 
 - Names must be ASCII English only
 - Never use `l`, `O`, `I` as single-char name of variable, class, method or constant
@@ -40,10 +21,8 @@ select = ["I"]
 
 ## Type hints
 
-Type hints are **mandatory everywhere** in production code, strongly recommended in tests
-
 - Use built-in generic types: `list[str]`, `dict[str, int]`, `set[int]`, `tuple[str, ...]` and e.t.c
-- Never use `List`, `Dict`, and other generic types from `typing` (deprecated since PEP 585)
+- Never use `List`, `Dict`, and other generic types from `typing`
 - Use `X | None` instead of `Optional[X]`, use `X | Y` instead of `Union[X, Y]`
 - Always annotate `-> None` for functions that return nothing
 - Specify concrete inner types for generics: for example `dict[str, int]`or list[str], instead of bare `dict` or `list`
@@ -59,22 +38,17 @@ def process(items: list[str]) -> dict[str, int]:
 
 ### Function
 
-- Target ~20-30 lines per function body; >50 lines = decompose.
-- One level of abstraction per function. Newer declare function insight gunction
+- Target ~20-30 lines per function body; >50 lines must be decomposed.
+- One level of abstraction per function. Newer declare function insight function
 - Never use `nonlocal` and `global`
 
 ### Classes design
 
 - Never use `@staticmethod`
 
-### Decorators
-
-- Always use `@functools.wraps(func)` in decorator wrappers.
-- If decorator may wrap both sync and async functions, provide both wrappers with `inspect.iscoroutinefunction` check
-
 ## Context managers
 
-- Use `@contextmanager` from `contextlib` to define a factory function for `with` statement context managers
+- Use `@contextmanager` and `@asynccontextmanager` from `contextlib` to define function for `with` statement context managers
 
 ## Exceptions
 
